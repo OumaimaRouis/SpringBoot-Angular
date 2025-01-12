@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,8 @@ public class Book {
     private String img;
     @OneToOne(fetch = FetchType.EAGER)
     private BookDetails bookDetails;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Publisher> publishers;
 
 
 
