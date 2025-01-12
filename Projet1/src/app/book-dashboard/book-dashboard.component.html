@@ -1,0 +1,86 @@
+<nav class="navbar navbar-light bg-primary">
+    <div class="container-fluid">
+        <h1 style="color: aliceblue">Books</h1>
+        <div class="d-flex">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Book</button>
+        </div>
+    </div>
+</nav>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th scope="col">Book ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Book Details</th>
+            <th scope="col">Image</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let book of books">
+            <td>{{ book.id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author?.nom }}</td>
+            <td>{{ book.bookDetails?.language }} - {{ book.bookDetails?.summary }}</td>
+            <td>
+                <!-- Check if book.imageUrl exists and display it -->
+<img *ngIf="book.img" [src]="book.img" alt="Book Image" style="max-width: 500px; height: auto;" />
+                <ng-template #noImage>
+                  <span>No Image Available</span>
+                </ng-template>
+                
+              </td>
+            <td>
+                <button type="button" data-toggle="modal" data-toggle="modal" data-target="#staticBackdrop" class="btn btn-info" (click)="onEdit(book)">Edit</button>
+                <button type="button" class="btn btn-danger" (click)="deleteBook(book)">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Book Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formValue">
+                    <div class="mb-3">
+                        <label for="ID" class="form-label">ID</label>
+                        <input type="text" class="form-control" id="id" formControlName="id">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Title" class="form-label">Title</label>
+                        <input type="text" class="form-control" formControlName="title" id="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="author" class="form-label">Author</label>
+                        <select class="form-select" formControlName="author" id="author">
+                            <option value="">Select Author</option>
+                            <option *ngFor="let author of authors" [value]="author.id">{{ author.nom }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bookDetails" class="form-label">Book Details</label>
+                        <select class="form-select" formControlName="bookDetails" id="bookDetails">
+                            <option value="">Select BookDetails</option>
+                            <option *ngFor="let detail of bookDetails" [value]="detail.id">{{ detail.language }} - {{ detail.summary }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="img" class="form-label">Image</label>
+                        <input type="file" class="form-control" formControlName="img" id="img" (change)="onFileChange($event)">
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="addBook()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>

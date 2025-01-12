@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <style>
+    body {
+      margin: 20px;
+    }
+    table {
+      margin-top: 20px;
+    }
+    thead th {
+      background-color: #f8f9fa;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2 class="text-center mb-4">Product List</h2>
+
+  <span th:text="${#authentication.name}"></span>
+  <form method="post" th:action="@{/logout}">
+    <button type="submit" class="btn btn-dark">Se Deconnecter</button>
+  </form>
+
+
+  <!-- Search Form -->
+    <form class="d-flex mb-4" th:action="@{/produits/user/home}" method="GET">
+    <input class="form-control me-2" type="search" placeholder="Search for products..." aria-label="Search" name="mc" th:value="${mc}">
+    <button class="btn btn-outline-primary" type="submit">Search</button>
+  </form>
+
+  <!-- Add Product Button (only for ADMIN role) -->
+  <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/produits/admin/creer}" class="btn btn-success mb-4">
+    <i class="bi bi-plus-circle"></i> Add Product
+  </a>
+
+  <!-- Product Table -->
+  <table class="table table-striped table-hover table-bordered">
+    <thead class="table-dark">
+    <tr>
+      <th>Id</th>
+      <th>Nom</th>
+      <th>Prix</th>
+      <th>Quantité</th>
+      <th>Nom Categorie</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${liste}">
+      <td th:text="${p.id}"></td>
+      <td th:text="${p.name}"></td>
+      <td th:text="${p.price}"></td>
+      <td th:text="${p.stock}"></td>
+      <td th:text="${p.categorie.nom}"></td>
+
+      <!-- Action Buttons (only for ADMIN role) -->
+      <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <a th:href="@{/produits/admin/delete/{id}(id=${p.id})}" class="bi bi-trash btn btn-danger"> </a>
+        <a th:href="@{/produits/admin/edit/{id}(id=${p.id})}" class="bi bi-pencil btn btn-warning"></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination Links -->
+  <ul class="nav nav-pills">
+    <li th:each="i,c:${page}">
+      <a th:href="@{/produits/user/home(page=${c.count},mc=${mc})}"
+         th:text ="${c.count}"
+         th:class="${current==c.index? 'btn btn-primary mx-2':'btn btn-outlinek-primary mx-2'}"></a>
+    </li>
+  </ul>
+</div>
+
+</body>
+</html>

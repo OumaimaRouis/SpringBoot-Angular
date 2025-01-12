@@ -1,0 +1,6 @@
+<app-book-dashboard *ngIf="isLoggedIn()"></app-book-dashboard>
+<!-- Ajouter un composant de connexion ou un message si non connecté -->
+<div *ngIf="!isLoggedIn()">
+  <p>Veuillez vous connecter pour accéder au tableau de bord.</p>
+  <app-login></app-login>
+</div>
